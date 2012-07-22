@@ -43,6 +43,7 @@ Server.on('connection', function(socket) {
   paused = false;
   clearTimeout(timeout);
 	socket.on('message', function(message) {
+    try {
     message = JSON.parse(message);
     if(message.type == 'announce'){
       type = message.announce;
@@ -56,6 +57,7 @@ Server.on('connection', function(socket) {
       write = type;
       console.log('Write requested by', type);
     }
+    } catch (e) {console.log(e);}
   });
   socket.on('close', function(){
     delete sockets[type];
