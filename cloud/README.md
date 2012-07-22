@@ -5,9 +5,9 @@ Getting data
 GET http://192.168.1.192/store/(id)
 
 => JSON of whatever was stored
+```
 
-
-```Storing data
+Storing data
 ============
 
 ```
