@@ -2,9 +2,9 @@ var serial = require('serialport'),
 	WebSocketServer = require('ws').Server;
 
 var port = process.argv[2],
-	prev = "";
+	prev = "",
 	saving = false,
-	ws;
+	ws,
 	wss = new WebSocketServer({port: 9000});
 	
 wss.on('connection', function(socket) {
