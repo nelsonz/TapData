@@ -132,17 +132,12 @@ void Adafruit_NFCShield_I2C::PrintHex(const byte * data, const uint32_t numBytes
   uint32_t szPos;
   for (szPos=0; szPos < numBytes; szPos++) 
   {
-    Serial.print("0x");
     // Append leading 0 for small values
     if (data[szPos] <= 0xF)
       Serial.print("0");
     Serial.print(data[szPos], HEX);
-    if ((numBytes > 1) && (szPos != numBytes - 1))
-    {
-      Serial.print(" ");
-    }
   }
-  Serial.println("");
+  Serial.print("\n");
 }
 
 /**************************************************************************/
