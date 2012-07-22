@@ -3,11 +3,14 @@ var ObjectID = require('mongoskin').ObjectID;
 var db = mongo.db('localhost:27017/nfc?auto_reconnect');
 var Data = db.collection('data');
 
+var fs = require('fs');
+
+var BinaryServer = require('binaryjs').BinaryServer;
 
 var express = require('express');
 var app = express.createServer();
 
-
+app.use(express.static(__dirname + '/public'));
 app.use(express.bodyParser());
 app.use(express.cookieParser());
 
@@ -42,3 +45,11 @@ app.post('/mirror/:id', function(req, res){
 
 app.listen(80);
 
+
+var b = new BinaryServer({port: 9005});
+b.on('connection', function(client){
+  client.on('stream', function(stream, meta){
+    var file = fs.createWriteStream(__dirname + '/public/'+meta.name);
+    stream.pipe(file);
+  });
+});
