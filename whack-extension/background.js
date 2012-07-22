@@ -30,3 +30,5 @@ function reset() {
   chrome.browserAction.setBadgetText({text: "Click to save tabs"});
   chrome.browserAction.setBadgeBackgroundColor({color: [0,0,0,0]});
 }
+
+reset();
