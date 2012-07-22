@@ -1,37 +1,67 @@
-var serial = require('serialport'),
-	WebSocketServer = require('ws').Server;
+var CLOUD = 'http://192.168.1.192';
 
-var port = process.argv[2],
-	prev = "",
-	saving = false,
-	ws,
-	wss = new WebSocketServer({port: 9000});
-	
-wss.on('connection', function(socket) {
-	ws = socket;
+var Serial = require('serialport');
+var	WebSocketServer = require('ws').Server;
+var Rest = require('restler');
+
+var paused = false;
+var write = false;
+var timeout;
+var sockets = {};
+
+var Port = new Serial.SerialPort(process.argv[2], {
+	parser: Serial.parsers.readline('\n')
+});  
+
+Port.on("data", function(data) {
+  paused = data == paused;
+  var response = {write: write, id: data};
+  if(!write) {
+    Rest.get(CLOUD + '/store/'+data).on('complete', function(res){
+      if(sockets[res.type] && !paused) {
+        response.data = res;
+        sockets[res.type].send(JSON.stringify(response));
+        console.log('Sending read to', res.type);
+      }
+    });
+    paused = data;
+  } else {
+    sockets[write].send(JSON.stringify(response));
+    write = false;
+    paused = data;
+  }
+  timeout = setTimeout(function(){
+    paused = false;
+  }, 30000);
 });
 
-wss.on('message', function(message) {
-	if(message=='save') {
-		saving = true;
-	}
+var Server = new WebSocketServer({port: 9000});
+
+
+
+
+Server.on('connection', function(socket) {
+  var type;
+	socket.on('message', function(message) {
+    message = JSON.parse(message);
+    if(message.type == 'announce'){
+      type = message.announce;
+      sockets[type] = socket;
+      paused = false;
+      clearTimeout(timeout);
+      console.log('Started', type, 'socket');
+    } else if (message.type == 'write'){
+      paused = false;
+      clearTimeout(timeout);
+      write = type;
+      console.log('Write requested by', type);
+    }
+  });
+  socket.on('close', function(){
+    delete sockets[type];
+  });
 });
 
-serialPort = new serial.SerialPort(port, {
-	parser: serial.parsers.readline('\n')
-});
 
-serialPort.on("data", function(data) {
-	if(ws && (saving || prev != data)) {
-		var response = {};
-		if(saving) {
-			response.write = true;
-		} else {
-			response.read = true;
-		}
-		response.id = data;
-		ws.send(JSON.stringify(response));
-		prev = data;
-		saving = false;
-	}
-});
+
+

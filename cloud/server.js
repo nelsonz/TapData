@@ -35,6 +35,10 @@ app.post('/store/:id', function(req, res){
     res.send('success');
   });
 });
+app.post('/mirror/:id', function(req, res){
+  req.body.id = req.params.id;
+  res.send(req.body);
+});
 
 app.listen(80);
 

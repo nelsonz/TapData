@@ -4,7 +4,8 @@
   "manifest_version": 2,
   "description": "NFC Sync",
   "browser_action": {
-    "default_icon": "icon.png"
+    "default_icon": "icon_grey.png",
+    "default_title": "Tap your NFC card to retrieve tabs"
   },
   "background": {
     "page": "background.html"
