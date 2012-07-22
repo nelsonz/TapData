@@ -1,0 +1,12 @@
+{
+	"BundleType": "Application",
+	"BundleIdentifier": "syncpad",
+	"AppName": "SyncPad",
+	"AppDescription": "NFC Sync",
+	"RequiredPermissions": [
+		
+	],
+	"SupportedLanguages": [
+		"en"
+	]
+}
