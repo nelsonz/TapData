@@ -25,10 +25,7 @@ void loop(void) {
   success = nfc.readPassiveTargetID(PN532_MIFARE_ISO14443A, uid, &uidLength);
   
   if (success && uidLength == 7) {
-    for (int i=0; i<uidLength; i++) {
-      Serial.print(uid[i], HEX);
-    }
-    Serial.print("\n");
+    nfc.PrintHex(uid, 7);
     /*
     // Try to read the first general-purpose user page (#4)
     Serial.println("Reading page 4");
