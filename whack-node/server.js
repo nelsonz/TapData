@@ -11,8 +11,10 @@ wss.on('connection', function(socket) {
 	ws = socket;
 });
 
-wss.on('save', function(socket) {
-	saving = true;
+wss.on('message', function(message) {
+	if(message=='save') {
+		saving = true;
+	}
 });
 
 serialPort = new serial.SerialPort(port, {
@@ -21,7 +23,14 @@ serialPort = new serial.SerialPort(port, {
 
 serialPort.on("data", function(data) {
 	if(ws && (saving || prev != data)) {
-		ws.send(data);
+		var response = {};
+		if(saving) {
+			response.write = true;
+		} else {
+			response.read = true;
+		}
+		response.id = data;
+		ws.send(JSON.stringify(response));
 		prev = data;
 		saving = false;
 	}
