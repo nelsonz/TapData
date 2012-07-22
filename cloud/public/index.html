@@ -1,0 +1,101 @@
+<html>
+
+<head>
+  
+  <link href="style.css" rel="stylesheet" type="text/css"> 
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>  
+  <script src="http://cdn.binaryjs.com/0/binarypack.js"></script>
+  <script src="http://cdn.binaryjs.com/0/binary.js"></script>
+  <script>$(function(){
+    var client = new BinaryClient('ws://192.168.1.192:9005');
+    client.on('open', function(){
+      var fref = $('#files');
+      fref[0].addEventListener("drop", function(e){    
+        e.preventDefault();
+        $('#write').css('display', 'block');
+        var file = e.dataTransfer.files[0];
+        var filea = $('<a></a>').addClass('file newfile').prop('href', URL + '/' + file.name).text(file.name).prop('target', '_blank');
+        fref.append(filea);
+        filea.animate({opacity: 1}, 300);
+        var stream = client.send(file, {name: file.name});
+      }, false);  
+      fref[0].addEventListener("dragenter", function(e){    
+        fref.addClass('over');
+        console.log('over');
+      }, false);
+      fref[0].addEventListener("dragleave", function(e){    
+        fref.removeClass('over');
+      }, false);
+    });
+    
+
+    var SERVER = 'ws://localhost:9000';
+    var URL = 'http://192.168.1.192';
+    
+    $('#write').click(function() {
+      ws.send(JSON.stringify({type: 'write'}));
+      $(this).hide();
+      $('#msg').show();
+    });
+
+    var ws;
+
+    start();
+
+    function start() {
+      ws = new WebSocket(SERVER);
+      ws.onopen = function(){
+        ws.send(JSON.stringify({type: 'announce', announce: 'files'}));
+      };
+      ws.onclose = function(){
+        setTimeout(start, 5000);
+      };
+      ws.onmessage = function(e) {
+        var data = JSON.parse(e.data);
+        $('#logo').addClass('shake');
+        $('#msg').hide();
+        setTimeout(function(){
+          $('#logo').removeClass('shake');
+        }, 500);
+        if(!data.write) {        
+          if(data.data.type == 'files') {
+            var files = $('#files').empty();
+            data.data.files.forEach(function(el, i){
+              setTimeout(function(){
+                var file = $("<a></a>").addClass('file').prop('href', URL + '/' + el).text(el).prop('target', '_blank');
+                files.append(file);
+                file.animate({opacity: 1}, 300);
+              }, i*100);
+            });
+          }
+          reset();
+        } else if (data.write) {
+          var files = [];
+          $('.file').each(function(){
+            files.push($(this).text());
+            $(this).removeClass('newfile');
+          });
+          // POST all the files
+          $.post(URL + '/store/'+data.id, {type: 'files', files: files});
+          reset();
+          
+        }
+      }
+    }
+
+    function reset() {
+      
+    }
+});
+    
+  </script>
+</head>
+
+<body>
+  <div id="logo"></div>
+  <div id="files"></div>
+  <a href="#" id="write">Save Files</a>
+  <div id="msg">Tap you NFC chip to complete</div>
+</body>
+
+</html>
