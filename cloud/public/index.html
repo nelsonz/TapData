@@ -12,6 +12,7 @@
       var fref = $('#files');
       fref[0].addEventListener("drop", function(e){    
         e.preventDefault();
+        $('#write').css('display', 'block');
         var file = e.dataTransfer.files[0];
         var filea = $('<a></a>').addClass('file newfile').prop('href', URL + '/' + file.name).text(file.name).prop('target', '_blank');
         fref.append(filea);
@@ -33,6 +34,8 @@
     
     $('#write').click(function() {
       ws.send(JSON.stringify({type: 'write'}));
+      $(this).hide();
+      $('#msg').show();
     });
 
     var ws;
@@ -50,6 +53,7 @@
       ws.onmessage = function(e) {
         var data = JSON.parse(e.data);
         $('#logo').addClass('shake');
+        $('#msg').hide();
         setTimeout(function(){
           $('#logo').removeClass('shake');
         }, 500);
@@ -59,7 +63,6 @@
             data.data.files.forEach(function(el, i){
               setTimeout(function(){
                 var file = $("<a></a>").addClass('file').prop('href', URL + '/' + el).text(el).prop('target', '_blank');
-                file.removeClass('newfile');
                 files.append(file);
                 file.animate({opacity: 1}, 300);
               }, i*100);
@@ -70,6 +73,7 @@
           var files = [];
           $('.file').each(function(){
             files.push($(this).text());
+            $(this).removeClass('newfile');
           });
           // POST all the files
           $.post(URL + '/store/'+data.id, {type: 'files', files: files});
@@ -90,7 +94,8 @@
 <body>
   <div id="logo"></div>
   <div id="files"></div>
-  <a href="#" id="write">Save changes</a>
+  <a href="#" id="write">Save Changes</a>
+  <div id="msg">Tap you NFC chip to complete</div>
 </body>
 
 </html>

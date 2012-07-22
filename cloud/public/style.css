@@ -54,20 +54,43 @@ body {
 }
 
 #write {
-  background: -webkit-linear-gradient(top, #ffffff 1%,#f8f8f8 100%); /* Chrome10+,Safari5.1+ */
   text-decoration: none;
   border-radius: 3px;
   box-shadow: 0px 1px 2px #ccc;
   background-color: #eee;
   padding: 15px;
-  font-weight: 18px;
+  display: block;
+  width: 100px;
+  text-align: center;
   color: #333;
   border: 1px solid #fff;
+  margin: 15px auto;
+  display: none;
+  background: -webkit-linear-gradient(top, #f8f8f8 1%,#ffffff 100%); /* Chrome10+,Safari5.1+ */
+  
+}
+
+#write:hover {
+  background: #fff;
+  
+}
+
+#msg {
+  text-decoration: none;
+  padding: 25px;
+  display: block;
+  width: 270px;
+  text-align: right;
+  color: #333;
+  box-shadow: 0px 1px 2px #ccc;
+  margin: 15px auto;
+  background: #f8f8f8 url(logob.png) 15px center no-repeat;
+  display: none;
 }
 
 .file:hover {
-  border-bottom: 2px solid #ccc;
-  padding-bottom: 9px;
+  border-bottom: 1px solid #ddd;
+  border-top: 1px solid #eee;
 }
 
 .newfile {
