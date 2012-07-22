@@ -14,10 +14,12 @@ var Port = new Serial.SerialPort(process.argv[2], {
 });  
 
 Port.on("data", function(data) {
+	console.log(data, write, paused);
   if(data !== paused) {
     var response = {write: write, id: data};
     if(!write) {
       Rest.get(CLOUD + '/store/'+data).on('complete', function(res){
+		  console.log(res.type);
         if(sockets[res.type]) {
           response.data = res;
           sockets[res.type].send(JSON.stringify(response));
@@ -32,7 +34,7 @@ Port.on("data", function(data) {
     }
     timeout = setTimeout(function(){
       paused = false;
-    }, 30000);
+    }, 10000);
   }
 });
 

@@ -1,10 +1,48 @@
 <html>
 <head>
 	<script src="jquery.js"></script>
-	<script src="syncpad.js"></script>
+	<script type="text/javascript">
+		var LOCAL = 'ws://localhost:9000',
+			CLOUD = 'http://192.168.1.192';
+			
+		var sp = getSpotifyApi(1),
+			player = sp.require('sp://import/scripts/api/models').player;
+
+		function init() {
+			var ws = new WebSocket(LOCAL);
+			
+			ws.onopen = function(){
+				ws.send(JSON.stringify({type: 'announce', announce: 'song'}));
+			};
+
+			ws.onclose = function(){
+				setTimeout(init, 5000);
+			};
+
+			ws.onmessage = function(msg) {
+				var data = JSON.parse(msg.data);
+				if (!data.write) {
+					var ms = data.data.position % 60000,
+						minutes = (data.data.position - ms)/60000;
+					player.play(data.data.track + "#" + minutes + ":" + ms/1000);
+				}
+				if (data.write) {
+					console.log(player.track.uri, player.position);
+					$.post(CLOUD + '/store/' + data.id, {type: 'song', track: player.track.uri, position: player.position});
+				}
+			}
+
+			$(document).on("click", "#write", function() {
+				ws.send(JSON.stringify({type: 'write'}));
+			});
+		}
+		
+		init();
+	</script>
 	<link rel="stylesheet" href="syncpad.css">
 </head>
 <body>
 	<a href="#" class="button" id="write">Write tag</a>
+	<div id="test">yo</div>
 </body>
 </html>

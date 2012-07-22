@@ -4,7 +4,7 @@
 	"AppName": "SyncPad",
 	"AppDescription": "NFC Sync",
 	"RequiredPermissions": [
-		
+		"http://192.168.1.192"
 	],
 	"SupportedLanguages": [
 		"en"
