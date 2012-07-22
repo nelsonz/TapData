@@ -23,7 +23,10 @@ app.get('/store/:id', function(req, res){
 });
 
 app.post('/store/:id', function(req, res){
-  Data.update({id: req.params.id}, req.body, {upsert: true});
+  req.body.id = req.params.id;
+  Data.update({id: req.params.id}, req.body, {upsert: true}, function(err){
+    res.send('success');
+  });
 });
 
 app.listen(80);
