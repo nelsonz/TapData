@@ -21,8 +21,13 @@ ws.onmessage = function(e) {
     });
   } else if (data.write) {
     var tabs = [];
-    $.post(URL + '/store/'+data.id, {type: 'tabs', tabs: tabs});
-    reset();
+    chrome.tabs.query({}, function callback(ts){
+      for(var i =0, ii = ts.length; i < ii; i++){
+        tabs.push(ts[i].url);
+      }
+      $.post(URL + '/store/'+data.id, {type: 'tabs', tabs: tabs});
+      reset();
+    });
   }
 }
 
