@@ -14,7 +14,6 @@ var Port = new Serial.SerialPort(process.argv[2], {
 });  
 
 Port.on("data", function(data) {
-	console.log(data, write, paused);
   if(data !== paused) {
     var response = {write: write, id: data};
     if(!write) {
