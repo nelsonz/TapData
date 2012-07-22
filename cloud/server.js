@@ -3,6 +3,7 @@ var ObjectID = require('mongoskin').ObjectID;
 var db = mongo.db('localhost:27017/nfc?auto_reconnect');
 var Data = db.collection('data');
 
+
 var express = require('express');
 var app = express.createServer();
 
@@ -26,3 +27,4 @@ app.post('/store/:id', function(req, res){
 });
 
 app.listen(80);
+
