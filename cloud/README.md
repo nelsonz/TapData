@@ -10,11 +10,11 @@ GET http://192.168.1.192/store/(id)
 Storing data
 ============
 
+
 ```
 POST http://192.168.1.192/store/(id)
 
 Content-type = application/json
 
 Body of request is JSON and stored directly into Mongo
-
 ```
