@@ -1,1 +1,9 @@
-whack
+You are the program. Save your execution state (music, open tabs, files) with a simple tap gesture - then pick up where you left off on your phone or another computer, using our NFC technology.
+
+Stack:
+Tagstand NFC tags/bracelets
+Adafruit PN532 RFID Controller shield
+Arduino Uno (ATMega328 running C, connected over USB serial)
+node.js local server
+Chrome extension, Spotify app, Android app
+node.js cloud server
