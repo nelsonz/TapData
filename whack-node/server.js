@@ -14,6 +14,9 @@ var Port = new Serial.SerialPort(process.argv[2], {
 });  
 
 Port.on("data", function(data) {
+  while (data.length < 7) {
+    data = "0" + data;
+  }
   if(data !== paused) {
     var response = {write: write, id: data};
     if(!write) {
@@ -37,9 +40,6 @@ Port.on("data", function(data) {
 });
 
 var Server = new WebSocketServer({port: 9000});
-
-
-
 
 Server.on('connection', function(socket) {
   var type;
