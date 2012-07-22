@@ -11,6 +11,13 @@ var app = express.createServer();
 app.use(express.bodyParser());
 app.use(express.cookieParser());
 
+app.use(function(req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
+
+  next();
+});
 
 app.get('/store/:id', function(req, res){
   Data.findOne({id: req.params.id}, function(err, doc){
