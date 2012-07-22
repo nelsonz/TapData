@@ -2,9 +2,11 @@ var SERVER = 'ws://localhost:9000';
 var URL = 'http://192.168.1.192';
 
 chrome.browserAction.onClicked.addListener(function() {
-  ws.send(JSON.stringify({type: 'write'}));
-  chrome.browserAction.setIcon({path: "icon_green.png"});
-  chrome.browserAction.setTitle({title: "Tap your card to save"});
+  if(ws){
+    ws.send(JSON.stringify({type: 'write'}));
+    chrome.browserAction.setIcon({path: "icon_green.png"});
+    chrome.browserAction.setTitle({title: "Tap your card to save"});
+  }
 });
 
 var ws;
