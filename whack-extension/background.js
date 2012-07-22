@@ -3,7 +3,7 @@ var URL = 'http://192.168.1.192';
 
 chrome.browserAction.onClicked.addListener(function() {
   ws.send('save');
-  chrome.browserAction.setBadgetText({text: "Waiting for NFC"});
+  chrome.browserAction.setBadgeText({text: "Waiting for NFC"});
   chrome.browserAction.setBadgeBackgroundColor({color: '#FF0000'});
 });
 
@@ -27,7 +27,7 @@ ws.onmessage = function(e) {
 }
 
 function reset() {
-  chrome.browserAction.setBadgetText({text: "Click to save tabs"});
+  chrome.browserAction.setBadgeText({text: "Click to save tabs"});
   chrome.browserAction.setBadgeBackgroundColor({color: [0,0,0,0]});
 }
 
