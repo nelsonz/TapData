@@ -20,6 +20,12 @@
 			};
 
 			ws.onmessage = function(msg) {
+        $('#logo').addClass('shake');
+        $('#label').hide();
+        setTimeout(function(){
+          $('#logo').removeClass('shake');
+          $('#label').show();
+        }, 500);
 				var data = JSON.parse(msg.data);
 				if (!data.write) {
 					var ms = data.data.position % 60000,
@@ -27,13 +33,15 @@
 					player.play(data.data.track + "#" + minutes + ":" + ms/1000);
 				}
 				if (data.write) {
+          $('#label').text('Click to save song');
 					console.log(player.track.uri, player.position);
 					$.post(CLOUD + '/store/' + data.id, {type: 'song', track: player.track.uri, position: player.position});
 				}
 			}
 
-			$(document).on("click", "#write", function() {
+			$(document).on("click", "#logo", function() {
 				ws.send(JSON.stringify({type: 'write'}));
+        $('#label').text('Tap to complete');
 			});
 		}
 		
@@ -42,8 +50,8 @@
 	<link rel="stylesheet" href="syncpad.css">
 </head>
 <body>
-  <div id="logo"></div>
-	<a href="#" class="button" id="write">Write tag</a>
-	<div id="test">yo</div>
+  <div id="logo">
+    <div id="label">Click to save song</div>
+  </div>
 </body>
 </html>
