@@ -18,7 +18,7 @@ Port.on("data", function(data) {
     var response = {write: write, id: data};
     if(!write) {
       Rest.get(CLOUD + '/store/'+data).on('complete', function(res){
-		  console.log(res.type);
+		  
         if(sockets[res.type]) {
           response.data = res;
           sockets[res.type].send(JSON.stringify(response));
