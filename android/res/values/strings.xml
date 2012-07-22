@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Whackify</string>
+    <string name="write_to_tag">Read mode\n\nClick to switch to write mode.</string>
+
+</resources>
